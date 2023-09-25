@@ -1,4 +1,7 @@
 {
+
+  "basicui-stuff": "platform/components/basicui/TextFieldWithButton.tsx",
+  "basicui-stuff2": "platform/components/basicui/GreetingComponent.tsx",
   "semantic-link": "platform/api/navigation/components/ResourceLinkComponent.ts",
   "semantic-link-container": "platform/api/navigation/components/ResourceLinkContainer.ts",
 
