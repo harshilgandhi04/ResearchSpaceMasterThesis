@@ -1,0 +1,266 @@
+/**
+ * ResearchSpace
+ * Copyright (C) 2020, © Trustees of the British Museum
+ * Copyright (C) 2015-2019, metaphacts GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ @import '~basic-styles.scss';
+
+.FileVisualizer {
+  width: 100%;
+  height: 100%;
+}
+
+.DirectFileUploader {
+/*   display: flex;
+  flex-direction: column;
+  width: 500px; */
+
+  .row {
+    display: flex;
+
+    .rightInputBar {
+      display: flex;
+      padding-left: 35px;
+      flex-direction: column;
+      flex-grow: 1;
+
+      label {
+        margin-top: 10px;
+        margin-bottom: 2px;
+      }
+
+      .storageInput {
+        flex-grow: 0;
+      }
+    }
+  }
+}
+
+.FileUploader {
+  min-width: 200px;
+  width: 40%;
+
+  .progress {
+    height: 15px;
+    box-shadow: none;
+    margin-bottom: 5px;
+  }
+}
+
+:global(.semantic-form) {
+
+  .FileUploader {
+
+    width: 100%;
+  }
+}
+
+.FileManager,
+.FileVisualizer {
+  .alertComponent {
+    position: absolute;
+    width: calc(100% - 4px);
+    font-size: 12px;
+    color: $color-dark;
+    height: 60px;
+    left: 2px;
+    bottom: 2px;
+    opacity: 0.8;
+    overflow: auto;
+    border-top: 2px dashed #666666;
+    background-color: #fdfae8;
+  }
+}
+
+.FileManager,
+.FileVisualizer,
+.FileUploader {
+  position: relative;
+  cursor: pointer;
+
+  .uploadedImageDepiction {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    img {
+      max-height: 100%;
+      max-width: 100%;
+    }
+  }
+}
+
+.FileManager {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: center;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+ // min-height: 215px;
+  padding: 12px 0 12px 10px;
+
+  img {
+    max-height: 100%;
+    max-width: 100%;
+    box-shadow: 0px 0px 7px 0px #585858;
+  }
+
+  .FileVisualizer {
+    overflow: visible;
+  }
+
+  .header {
+    height: fit-content;
+    width: 100%;
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    .uploadedImageIri {
+      display: block;
+      flex-shrink: 0;
+      flex-grow: 0;
+      max-width: 100%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      margin-bottom: 5px;
+      white-space: nowrap;
+
+      font-weight: 600;
+      color: $color-dark;
+      font-size: 16px;
+      cursor: auto;
+    }
+  }
+
+  .fileContainer {
+    position: relative;
+    display: flex;
+    height: 180px;
+    width: auto;
+    margin-top: 10px;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+
+    .caRemoveFile {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      top: 5px;
+      right: 5px;
+      border-radius: 3px;
+      width: 25px;
+      height: 25px;
+      color: $btn-grey-color;
+      border: 1px solid $btn-grey-border-color;
+      background-color: $btn-grey-color-bg;
+      cursor: pointer;
+      box-shadow: 0px 0px 1px 1px #ffffff49;
+
+      &:hover,
+      &:focus {
+        color: $btn-grey-color;
+        background-color: $btn-grey-hover-color-bg;
+      }
+    }
+  }
+}
+
+.emptyBody,
+.fileIcon {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-grow: 1;
+  font-size: 30px;
+  color: #a2a2a2;
+
+  .spinner {
+    position: relative;
+    display: flex;
+    font-size: 26px;
+    align-items: center;
+    flex-direction: column;
+    top: -10px;
+    left: 0;
+  }
+}
+
+.fileIcon {
+  font-size: 60px;
+  color: $color-dark;
+}
+
+.mpDropZonePlaceHolder {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  font-size: 16px;
+  line-height: 1.4;
+  color: $color-dark;
+  text-align: center;
+}
+
+.uploadCompletedPlaceholder {
+  background-color: #ebffeb;
+}
+
+.selectorHolder {
+  width: 100%;
+
+  :global(.form-group) {
+    min-height: auto;
+  }
+}
+
+.urlInputHolder {
+  display: flex;
+  width: 100%;
+
+  :global(button.btn) {
+    margin-top: 0 !important;
+    flex: 1;
+  }
+
+  :global(.form-control) {
+
+    border: 1px solid $input-border-color;
+    margin-right: 3px;
+  }
+}
+
+.storageInput {
+
+  :global(.btn) {
+
+   line-height: 0.9;
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "version": "2.0.0",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "platform/app/*": ["src/main/web/app/*"],
+      "platform/api/*": ["src/main/web/api/*"],
+      "platform/components/*": ["src/main/web/components/*"],
+      "platform/*": ["src/main/web/*"],
+      "platform-tests/*": ["src/test/web/*"],
+      "ol/proj": ["@types/ol/proj"],
+      "ol-ext": ["types-ol-ext"],
+      "ontodia": ["src/main/web/ontodia/src/ontodia"]
+    },
+    "types": ["systemjs"],
+    "target": "es5",
+    "module": "commonjs",
+    "declaration": false,
+    "noImplicitAny": false,
+    "removeComments": true,
+    "lib": ["dom", "es2015"],
+    "preserveConstEnums": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noImplicitUseStrict": true,
+    "importHelpers": true,
+    "jsx": "react",
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "plugins": [
+      {
+        "name": "typescript-eslint-language-service"
+      }
+    ]
+  },
+  "include": [
+    "typings/**/*",
+    "src/main/web/**/*",
+    "src/test/web/**/*"
+  ]
+}

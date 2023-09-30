@@ -1,0 +1,137 @@
+.ontodia-class-tree {
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+
+  padding: 5px 7px;
+
+  &__filter {
+    flex-shrink: 0;
+    margin: 0 0 10px 0;
+  }
+
+  &__filter-group {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  &__only-creatable {
+
+    display: flex;
+    align-items: center;
+    margin-top: 12px;
+    margin-bottom: 0px;
+    padding-left: 10px;
+
+    input {
+      margin-right: 5px;
+    }
+    
+  }
+
+  &__tree {
+    border-top: 1px solid rgb(221, 221, 221);
+    padding: 8px 14px;
+  }
+
+  &__spinner {
+    align-self: center;
+    /* center vertically in flexbox */
+    margin: auto;
+  }
+}
+
+.ontodia-class-leaf {
+  margin: 1px 0px 5px 0px;
+
+  &__row {
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    user-select: none;
+    > * { flex-shrink: 0; }
+  }
+
+  &__body { 
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 1px;
+    border: 1px solid;
+    border-color: transparent;
+    &:hover {
+      background: #dcebff91;
+      border-color: #ccefff;
+      cursor: pointer;
+    }
+    &--selected {
+      background-color: #beebff;
+      border-color: #8edcff;
+    }
+  }
+
+  &__icon-container {
+    height: 16px;
+  }
+
+  &__icon {
+    display: block;
+    height: 100%;
+  }
+
+  &__label {
+    margin-left: 5px;
+    color: $color-dark;
+    line-height: 1.2;
+    font-size: 16.6px;
+    font-weight: 600;
+  }
+
+  &__highlighted-term {
+    font-weight: bold;
+  }
+
+  &__count {
+    margin-left: 5px;
+  }
+
+  &__children {
+    margin-left: 20px;
+    padding: 1px 0 3px 0;
+
+    .ontodia-class-leaf__label {
+      font-size: 14.5px;
+    }
+  }
+
+  &__no-toggle {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+  }
+
+  &__toggle {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin: 5px;
+    &:hover:not(:empty) {
+      background: #dcebff91;
+      cursor: pointer;
+    }
+  }
+
+  &__toggle-icon {
+    display: block;
+    height: 98%;
+  }
+
+  &__create {
+    margin-left: 5px;
+    > button {
+      cursor: pointer;
+    }
+  }
+}

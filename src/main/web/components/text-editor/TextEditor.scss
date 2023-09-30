@@ -1,0 +1,390 @@
+/**
+ * ResearchSpace
+ * Copyright (C) 2020, © Trustees of the British Museum
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import "~basic-styles.scss";
+
+// Text Editor
+
+$editorWidth: 794px;
+
+:global(.Dashboard--template) {
+  height: 100%;
+}
+
+.narrativeHolder {
+  height: 100%;
+  background-color: $color-narrative-bg;
+  padding-bottom: 50px;
+
+  // DropArea styling
+  :global(.DropArea--dropArea) {
+    height: 40px;
+  }
+
+  :global(.DropArea--dropArea.mp-droppable-enabled > .DropArea--children) {
+    display: none;
+  }
+
+  :global(.DropArea--messageWrapper) {
+    height: 100%;
+    display: none;
+  }
+
+  :global(.DropArea--dropArea.mp-droppable-enabled .DropArea--messageWrapper) {
+    display: block;
+    background-color: transparent;
+  }
+
+  :global(.DropArea--dropMessage) {
+
+    min-height: 100%;
+    height: 100% !important;
+    padding: 3px 0;
+
+  }
+
+  :global(.DropArea--dropArea.mp-droppable-enabled:not(.mp-droppable-hover) .DropArea--dropMessage) {
+
+    background-color: transparent;
+  }
+
+  :global(.DropArea--dropArea.mp-droppable-enabled.mp-droppable-hover .DropArea--dropMessage) {
+    background-color: $color-dark--op30 !important;
+  }
+
+}
+
+.titleHolder {
+  display: flex;
+  align-items: center;
+
+  margin-top: 3px;
+  margin-bottom: 12px;
+
+  background-color: $color-white;
+  border: 1px solid #ddddddd1;
+  border-radius: 3px;
+}
+
+.titleInput {
+  width: $editorWidth - 34px;
+  margin-left: auto;
+  margin-right: auto;
+
+  :global(.form-control) {
+
+    font-size: 19px;
+    letter-spacing: .3px;
+    font-weight: bold;
+    height: 48px;
+    padding: 6px 15px;
+  //  border: none;
+  }
+}
+
+.draggableGripper {
+
+  width: 25px;
+  display: flex;
+  justify-content: flex-end;
+
+  cursor: grab;
+  flex-shrink: 0;
+
+  :global(.rs-icon.rs-icon-drag_points) {
+
+    font-size: 20px;
+  }
+}
+
+.resourceBlock {
+  display: flex;
+  justify-content: center;
+  border: 2px dashed $color-white;
+  margin: 0 0 ($line-height-computed / 2);
+  padding: 10px;
+
+  // TODO
+  & > div > :global(.card.rs-object-card.rs-search-card) {
+    margin: 0;
+  }
+
+  :global(.mirador-osd-annotation-controls) {
+    display: none;
+  }
+
+  :global(.mirador .mirador-manipulation-controls) {
+      top: 0;
+  }
+
+  :global(.mirador a:hover) {
+    background-color: transparent;
+  }
+
+  :global(a.edit), :global(a.delete) {
+  //  display: none;
+  }
+}
+
+.resourceBlockActive {
+  border: 2px dashed $color-dark;
+}
+
+/*
+ we need to set relative position for sidebar and editor holder, so we can
+ get relative position of the editor and use it for sidebar positioning
+*/
+.sidebarAndEditorHolder {
+  overflow: auto;
+  background-color: $color-narrative-bg;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.editorContainer {
+  // need for text-align to work properly
+  white-space: normal;
+
+  border: 1px solid #ddddddd1;
+  background-color: rgb(255, 255, 255);
+  width: $editorWidth;
+  box-shadow: 0 1px 3px 1px rgba(60,64,67,.15);
+
+  // for edit mode, later extract
+
+  & > div {
+    padding: 20px 70px;
+  }
+  & a {
+    cursor: text;
+    text-decoration: underline;
+  }
+
+  & a:hover {
+    background-color:  #f2f3f5;
+  }
+}
+
+.sidebarContainer {
+    position: absolute;
+}
+
+
+// Sidebar
+
+.sidebar {
+    border-right: 3px solid #f2f3f5;
+    padding: 0 5px;
+    position: absolute;
+    transition: transform .15s;
+    left: 141px;
+
+    :global(.btn) {
+      background-color: $color-narrative-bg;
+    }
+}
+
+
+// Toolbar
+.toolbar {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+
+  :global(.btn-toolbar > .btn-group) {
+    margin-left: 8px;
+  }
+
+  :global(.btn) {
+      border-radius: 2px;
+      border: 1px solid #ddd;
+
+      &[disabled] {
+
+          &:hover {
+              box-shadow: none;
+              background-color: $color-btn-toolbar-bg;
+              color: $color-btn-toolbar;
+          }
+      }
+
+      &.active {
+          box-shadow: inset 0px -3px 0px 0px $color-dark;
+      }
+  }
+
+  :global(.btn-success) {
+      height: 38px;
+      font-size: 13.5px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      padding: 0 15px;
+  }
+
+  :global(.btn-default) {
+      height: 38px;
+      font-size: 13.5px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: $color-btn-toolbar;
+      background-color: $color-btn-toolbar-bg;
+      padding: 0 12px;
+
+      &:hover {
+          box-shadow: inset 0px -2px 0px 0px $color-btn-toolbar;
+      }
+  }
+}
+
+.dropdown {}
+
+.sidebarDropdown {
+  border: 0;
+}
+
+.dropdownMenuItem {
+    width: 130px;
+    display: inline-block;
+    text-align: start;
+}
+
+.dropdownMenuItemIcon {
+    width: 25px;
+    display: inline-block;
+}
+
+.toolbar .dropdownMenuItemIcon {
+    margin-right: 10px;
+}
+.sidebar .dropdownMenuItemIcon {
+    margin-right: 5px;
+}
+
+// links
+.internalLink {
+  /**/
+}
+
+.externalLink:before {
+  font-family: FontAwesome;
+  content: "\F08E ";
+  font-size: 11px;
+}
+
+.externalLinkHolder {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  flex-grow: 1;
+}
+
+.linkPopover {
+  display: flex;
+
+  width: 245px;
+  height: 100%;
+  padding: 3px;
+
+  & :global(.DropArea--children) {
+    align-items: center;
+    justify-content: center;
+  }
+
+  & :global(.DropArea--dropArea) {
+    padding-right: 7px;
+  }
+
+  & :global(.DropArea--dropMessage) {
+    min-height: 70px;
+
+    font-size: 14px;
+    line-height: 1.3;
+    border: 1px dashed $color-light-grey2;
+    background-color: transparent;
+    color: $btn-grey-color;
+  }
+
+  & :global(.DropArea--dropArea.mp-droppable-hover .DropArea--dropMessage) {
+    background-color: $color-dark--op30 !important;
+  }
+
+  & a {
+    text-decoration: underline;
+    color: $btn-grey-color;
+  }
+
+  :global(.form-control) {
+    background-color: transparent;
+    color: $btn-grey-color;
+    border-color: $color-light-grey2;
+
+    &::placeholder {
+      color: $color-light-grey2;
+    }
+
+    &:focus {
+      border-bottom: 1px solid $color-light-grey2;
+    }
+  }
+
+  :global(.btn-grey), :global(.btn-success) {
+
+    width: 34px;
+
+    :global(.fa) {
+      padding: 0;
+    }
+  }
+
+  :global(.btn-success) {
+    border: none;
+    margin-right: 1px;
+  }
+}
+
+:global {
+  // link editor
+  #external-link-popover,
+  #internal-link-popover {
+
+    background-color: $color-narrative-popover-bg;
+    border-color: #d6dbdf;
+    color: $color-dark;
+
+    &.popover.top > .arrow {
+      border-top-color: #d6dbdf;
+
+        &:after {
+        border-top-color: $color-narrative-popover-bg;
+        }
+    }
+
+    .btn-group {
+      display: flex;
+      margin-left: 8px;
+      height: 35px;
+    }
+  }
+
+  // see https://github.com/ianstormtaylor/slate/issues/2302
+  [data-slate-void='true'], [data-slate-spacer="true"]{
+    position: relative!important
+  }
+}

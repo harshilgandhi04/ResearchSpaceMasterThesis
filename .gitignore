@@ -1,0 +1,43 @@
+*.class
+*.log
+
+# eclipse
+.classpath
+.project
+.settings
+bin/
+
+# Gradle
+.gradle
+build
+mappings/
+
+# Visual Studio code
+.vscode*
+
+# IntelliJ IDEA
+.idea/
+
+#build specific
+node_modules/
+.log
+/webpack/tests_out/
+/webpack/*.log.*
+tsconfig.tsbuildinfo
+dist/docker/
+src/main/webapp/assets/bundles-manifest.json
+
+# emacs
+.#*
+\#*
+
+#idea
+.idea/
+*.iml
+*.iws
+
+# runtime
+/runtime-data*
+
+# Mac
+.DS_Store

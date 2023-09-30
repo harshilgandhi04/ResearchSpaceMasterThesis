@@ -1,0 +1,124 @@
+/**
+ * ResearchSpace
+ * Copyright (C) 2020, © Trustees of the British Museum
+ * Copyright (C) 2015-2019, metaphacts GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+@import '~basic-styles.scss';
+
+$remove-value-color: gray;
+
+.field-editor {
+
+  padding-bottom: 30px;
+
+  .form-group {
+
+ //   height: $input-height; //changing this value, change the all group height
+  }
+
+  .CodeMirror-sizer {
+    min-height: 33px !important; //overwrite inline style
+  }
+
+  .label-default {
+    color: $brand-primary;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+
+    .col-md-1 {
+      padding: 0px;
+      width: auto;
+    }
+  
+    .col-md-8 {
+      width: calc(75% - 37px);
+    }
+  }
+
+  &__expand {
+    color: $color-dark;
+    font-size: $font-size-small;
+    cursor: pointer;
+  }
+
+  &__collapse {
+    padding: 10px 12px;
+  }
+
+  &__error {
+    color: $color-danger;
+    font-size: $font-size-base;
+    font-weight: 600;
+    letter-spacing: .1px;
+    margin-top: -$padding-base-vertical;
+    white-space: pre-wrap;
+  }
+
+  .yasqe_buttons {
+    visibility: hidden;
+  }
+
+  &__xsd-input {
+
+    .Select-menu-outer {
+      z-index: 9999 !important;
+    }
+  }
+
+  &__default-input-holder {
+    display: flex;
+    margin-top: 10px;
+  }
+  &__delete-default {
+    flex: 0 0 auto;
+    margin-left: 10px;
+    color: $remove-value-color;
+  }
+
+  &__generate-iri:hover {
+    color: $color-dark;
+    cursor: pointer;
+  }
+  &__generate-iri:after {
+    @include clearfix();
+  }
+  &__lang-selector-holder {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: -1px;
+    width: 85px;
+  }
+
+  &__delete-label-button {
+    margin-left: 11px;
+  }
+}
+
+.tree-patterns-editor {
+  border-left: 2px solid #dadada;
+  padding-left: 10px;
+
+  &__type-switch {
+    margin-bottom: 0;
+    &:not(:first-child) {
+      margin-left: 10px;
+    }
+  }
+}

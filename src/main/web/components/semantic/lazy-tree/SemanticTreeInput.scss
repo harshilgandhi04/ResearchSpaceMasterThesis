@@ -1,0 +1,121 @@
+/**
+ * ResearchSpace
+ * Copyright (C) 2020, © Trustees of the British Museum
+ * Copyright (C) 2015-2019, metaphacts GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+@import '~basic-styles.scss';
+
+.holder {
+  position: relative;
+
+  // overlay holder
+  & > div:not(.inputAndButtons) {
+    position: absolute;
+    width: 100%;
+    z-index: $zindex-page-holder;
+  }
+}
+
+.inputAndButtons {
+  display: flex;
+  align-items: center;
+
+  min-height: $input-height;
+
+  border: 1px solid $input-border-color;
+  border-radius: $input-border-radius;
+  background-color: $input-color-bg;
+
+  :global(.clearable-input) {
+
+    background-image:none;
+    border:none;
+  }
+}
+
+.textInput {
+  display: flex;
+  flex: auto;
+  align-items: center;
+  border-right: 0;
+
+  :global(.RemovableBadge) {
+    margin: 3px 6px;
+  }
+}
+
+.dropdown {
+  overflow: auto;
+  border: 1px solid $input-border-color;
+  border-top-width: 0;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  background: $input-color-bg;
+  white-space: normal;
+}
+
+.tree {
+  height: 300px;
+}
+
+.input {
+  height: 30px;
+}
+
+.browseButton {
+  flex: 0 0;
+}
+
+.dropdownFooter {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  border-top: 1px solid $input-border-color;
+  padding: 6px;
+}
+
+.dropdownButton {
+ // height: 30px;
+  padding: 6px 8px;
+}
+
+.dropdownButton:not(:last-child) {
+  margin-right: 3px;
+}
+
+.searchSpinner {
+  margin: 10px 0;
+}
+
+.searchMessage {
+  text-align: center;
+  display: block;
+  margin: 10px;
+  color: $color-dark;
+}
+
+.error::after {
+  content: 'error';
+  font-size: smaller;
+  color: white;
+  background: $color-danger;
+  padding: 0 5px;
+  margin: 0 3px;
+}
+
+.highlighted {
+  color: $color-danger;
+  font-weight: 600;
+}

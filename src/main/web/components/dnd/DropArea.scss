@@ -1,0 +1,78 @@
+/**
+ * ResearchSpace
+ * Copyright (C) 2020, © Trustees of the British Museum
+ * Copyright (C) 2015-2019, metaphacts GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+@import '~basic-styles.scss';
+
+.dropArea,
+.children {
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.messageWrapper {
+
+  position: relative;
+}
+
+.dropMessage {
+  display: none;
+  position: relative;
+  margin: 0;
+  padding: 0px 20px;
+  width: 100%;
+  min-height: 100px;
+  justify-content: center;
+  align-items: center;
+  border: 1px dashed $color-dark;
+  background: $color-white;
+  color: $color-dark;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: .3px;
+  line-height: 1.4;
+  z-index: 10;
+}
+
+.alwaysVisible {
+  .dropMessage {
+    display: flex;
+  }
+}
+
+.dropArea:global(.set-management) {
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+.dropArea:global(.mp-droppable-enabled) > .messageWrapper {
+
+  height: 100%;
+}
+
+.dropArea:global(.mp-droppable-enabled) > .messageWrapper > .dropMessage {
+  display: flex;
+  height: 100%;
+}
+
+.dropArea:global(.mp-droppable-enabled) > .children {
+  opacity: 0.2;
+  pointer-events: none;
+  border-color: $color-dark;
+  border-width: 1px;
+}

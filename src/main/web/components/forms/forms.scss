@@ -1,0 +1,731 @@
+/**
+ * ResearchSpace
+ * Copyright (C) 2020, © Trustees of the British Museum
+ * Copyright (C) 2015-2019, metaphacts GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+@import '~basic-styles.scss';
+
+$default-error-color: $color-danger;
+$configuration-error-color: #6f6f6f;
+$loading-error-color: $color-warning;
+
+$form-group-margin-bottom: 15px; //bootstrap variable
+
+//Bootstrap mixin override
+@mixin form-control-validation($color, $border-color, $border-bg-color) {
+  // Color the label and help text
+  .help-block,
+  .control-label,
+  .radio,
+  .checkbox,
+  .radio-inline,
+  .checkbox-inline,
+  &.radio label,
+  &.checkbox label,
+  &.radio-inline label,
+  &.checkbox-inline label  {
+    color: $color;
+  }
+  // Set the border and box shadow on specific inputs to match
+  .form-control {
+
+    color: $color;
+    box-shadow: none;
+    border-color: $border-color;
+    
+    &:focus {
+      border-color: $border-color;
+      background-color: $border-bg-color;
+      box-shadow: none;
+    }
+
+    &::placeholder {
+      color: $color;
+      opacity: .6;
+    }
+  }
+  // Set validation states also for addons
+  .input-group-addon {
+  //  color: $color-dark;
+ //   border-bottom: 1px solid $border-color;
+  }
+  // Optional feedback icon
+  .form-control-feedback {
+    color: $color-dark;
+  }
+}
+
+.form-control {
+
+  height: $input-height;
+
+  color: $color-dark;
+  font-size: $font-size-base;
+  
+  background-color: $input-color-bg;
+
+  border-radius: $input-border-radius;
+  border: 1px solid $input-border-color;
+
+  padding: 0px 12px;
+
+  -webkit-box-shadow: none;
+  box-shadow: none;
+
+  &::placeholder {
+    color: $input-placeholder-color;
+    font-weight: normal;
+  }
+
+  &:focus {
+    outline: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-color: inherit;
+    border: 1px solid $input-border-color;
+
+    &::placeholder {
+      /* Chrome, Firefox, Opera, Safari 10.1+ */
+      font-weight: normal;
+      opacity: 0.7; /* Firefox */
+    }
+  }
+}
+
+.keyword-search-container {
+
+  display: flex;
+  align-items: center;
+  height: $input-height;
+
+  background-color: $input-color-bg;
+  border-radius: $input-border-radius;
+  border: 1px solid $input-border-color;
+
+  i {
+
+    font-size: 16px;
+    padding-left: 20px;
+    color: $color-dark--op75;
+  }
+
+  .form-group {
+    margin: 0;
+    border: none;
+    min-height: inherit;
+  }
+
+  .form-control.input-keyword-search {
+
+    border: none;
+    height: inherit;
+  //  font-size: 15px;
+  //  letter-spacing: 0.2px;
+    padding: 0px 20px;
+  }
+}
+
+textarea.form-control {
+
+  min-height: $input-height;
+  padding: 10px 15px;
+
+} 
+
+.form-control[disabled],
+.form-control[readonly],
+fieldset[disabled] .form-control {
+
+  background-color: inherit;
+  opacity: 0.4;
+}
+
+// Feedback states
+.has-success {
+  @include form-control-validation($color-success-text, $color-success, $color-success-light);
+}
+.has-warning {
+  @include form-control-validation($color-warning-text, $color-warning,$color-warning-light);
+}
+.has-error {
+  @include form-control-validation($color-danger, $color-danger, $color-danger-light);
+}
+
+.form-group {
+ margin-bottom: $form-group-margin-bottom;
+ width: 100%;
+ min-height: $input-height;
+ height: 100%;
+ border-radius: $input-border-radius;
+
+ .input-group {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   width: 100%;
+   height: inherit;
+
+   .form-control {
+
+     display: block;
+     flex-grow: 1;
+     margin-right: 5px;
+   }
+
+   .input-group-addon, 
+   .input-group-btn {
+
+     width: auto;
+     height: inherit;
+
+     & button {
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+     .Select-input > input {
+      padding: 0;
+      height: 100%;
+     }
+   }
+ }
+}
+
+.form-horizontal .form-group {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.composite-input {
+  width: 100%;
+  height: 100%;
+}
+
+.cardinality-support {
+
+  display: flex;
+  flex-direction: column;
+
+  &__add-value {
+
+    text-decoration: underline;
+
+    &:hover,
+    &:focus {
+
+      text-decoration: underline;
+    }
+    
+    &--first {
+      align-self: flex-start;
+      margin: 5px 0px 5px 10px;
+    }
+
+    &--another {
+      
+      margin-top: 6px;
+      align-self: start;
+      font-size: 13px;
+      font-weight: lighter;
+      
+    }
+  }
+
+  &__single-instance + &__single-instance,
+  &__group-instance + &__group-instance {
+    margin-top: 10px;
+  }
+
+  &__single-instance {
+
+    border: 1px solid $input-border-color;
+    border-radius: $input-border-radius;
+    background-color: $input-color-bg;
+    display: flex;
+    align-items: flex-start;
+
+    .select-text-field,
+    .plain-text-field,
+    .autocomplete-text-field,
+    .date-picker-field {
+      flex: 1 1 100%;
+    }
+
+    .form-control-feedback {
+      position: absolute;
+      top: 0;
+      right: 0;
+      line-height: 39px;
+    }
+  }
+
+  &__single-instance > &__remove-value {
+    flex: 0 0 auto;
+  }
+
+  &__group-instance {
+    position: relative;
+    padding: 15px;
+    border: 1px solid $input-border-color;
+
+    .semantic-form-input-decorator--with-header:first-of-type {
+      .semantic-form-input-decorator__header {
+        margin-top: 15px;
+      }
+    }
+  }
+
+  &_no-header {
+
+    padding: 0px;
+    border: none;
+
+    .semantic-form-input-decorator--with-header:first-of-type {
+      .semantic-form-input-decorator__header {
+        margin: 30px 0 5px 0px;
+      }
+    }
+  }
+
+  &__group-instance > &__remove-value {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    padding: 3px 6px;
+    border: none;
+  }
+}
+
+.plain-text-field {
+
+  &__inputs {
+    display: flex;
+
+    > .form-group {
+      margin-bottom: 0;
+    }
+  }
+
+  &__text,
+  & :first-child {
+    flex-grow: 1;
+  }
+
+  &__text {
+    width: 100%;
+  }
+
+  textarea.plain-text-field__text {
+    
+    min-height: $input-height;
+    width: 100%;
+
+    background-color: $input-color-bg;
+    border: 1px solid $input-border-color;
+    border-radius: $input-border-radius;
+    font-size: $font-size-base;
+  //  font-weight: 600;
+
+    padding: 10px 15px;
+
+    &::placeholder {
+      color: $input-placeholder-color;
+      font-weight: normal;
+    }
+  
+    &:focus {
+      
+      outline: none;
+
+      &::placeholder {
+        opacity: 0.7;
+      }
+    }
+  }
+
+  &__language {
+    flex-basis: 120px;
+
+    > .Select-control {
+      border-left: none;
+    }
+  }
+}
+
+.autocomplete-text-field {
+
+  &__main-row {
+    display: flex;
+  }
+
+  &__select {
+    flex: auto;
+  }
+
+  &__create-button {
+
+    display: flex;
+    align-items: center;
+
+    background-color: $input-color-bg;
+
+    border-radius: 0;
+
+    height: $input-height;
+
+    font-weight: 600;
+    font-size: 16px;
+    padding: 0 15px;
+
+    .fa-plus {
+
+      font-size: 14px;
+    }
+
+  }
+
+  &__create-button.btn-default,
+  &__create-button.btn-default:active:hover {
+
+    border: none;
+    border-right: 1px solid $input-border-color;
+    border-left: 1px solid $input-border-color;
+
+  }
+}
+
+.semantic-form-input-decorator {
+  // See also conditinal override at
+  // `platform/components/3-rd-party/ontodia/authoring/EntityForm.scss`
+
+  &__header {
+
+    margin: 30px 0 5px 0px;
+  }
+
+  &__label {
+    text-transform: capitalize;
+    font-weight: bold;
+  }
+
+  &__label-required:after {
+    content: '*';
+    padding-left: 2px;
+    color: $color-danger;
+  }
+
+  &__description-icon {
+    margin-left: 5px;
+    top: -0.2em;
+    text-transform: capitalize;
+    @include icon(question-circle);
+    color: $color-primary-100;
+  }
+
+  &__spinner {
+    left: 10px;
+    color: gray;
+  }
+}
+
+
+.semantic-form-tree-picker-input {
+
+  display: flex;
+
+  &__picker {
+    flex: auto;
+  }
+
+  &__create-button {
+    margin-left: 5px;
+
+    display: flex;
+    align-items: center;
+
+    background-color: $input-color-bg;
+
+    border-radius: $input-border-radius;
+
+    height: $input-height;
+
+    font-weight: 600;
+    font-size: 16px;
+    padding: 0 15px;
+
+    .fa-plus {
+
+      font-size: 14px;
+    }
+  }
+
+  &__create-button.btn-default,
+  &__create-button.btn-default:active:hover {
+
+    border: 1px solid $input-border-color;
+  }
+}
+
+.semantic-form-errors {
+
+  &__error-source {
+
+    text-transform: capitalize;
+    &:after {
+      content: ': ';
+    }
+  }
+
+  &__error {
+    color: $default-error-color;
+
+    &--configuration {
+      color: $configuration-error-color;
+    }
+    &--loading {
+      color: $loading-error-color;
+    }
+  }
+}
+
+.semantic-form-validation-messages {
+
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+
+  &__error {
+    color: $default-error-color;
+    padding: 8px;
+
+    &--configuration {
+      color: $configuration-error-color;
+    }
+    &--loading {
+      color: $loading-error-color;
+    }
+  }
+}
+
+.semantic-form-recover-notification {
+
+  &__message {
+    margin-bottom: 8px;
+  }
+
+  &__discard-data,
+  &__discard-data:hover,
+  &__discard-data:active,
+  &__discard-data:focus,
+  &__discard-data:focus-within,
+
+  &__hide,
+  &__hide:hover,
+  &__hide:active,
+  &__hide:focus,
+  &__hide:focus-within {
+
+    background-color: $input-color-bg;
+    border: none;
+    padding: 5px 8px;
+  }
+
+  #hide-i {
+
+    color: $color-success;
+  }
+
+  #discard-i {
+
+    color: $color-danger;
+  }
+}
+
+.semantic-form-checklist-input,
+.semantic-form-checkbox-input {
+  &_row {
+    display: flex;
+  }
+
+  &__label {
+    cursor: auto;
+    font-size: 15px;
+    font-weight: normal;
+    display: inline-flex;
+    flex-direction: row-reverse;
+    margin-right: 20px;
+  }
+
+  &__input {
+    display: none;
+  }
+
+  &__input:indeterminate ~ &__checkbox {
+    background-color: darkgrey;
+    border: 3px #ccc solid;
+    cursor: auto;
+  }
+
+  &__radio,
+  &__checkbox {
+    cursor: pointer;
+    position: relative;
+    height: 20px;
+    width: 20px;
+    margin-right: 10px;
+    background-color: #ccc;
+  }
+  &__radio {
+    border-radius: 50%;
+  }
+  &__checkbox {
+    border-radius: 0;
+  }
+
+  &__input:checked ~ &__radio,
+  &__input:checked ~ &__checkbox {
+    background-color: $color-checkbox-select;
+  }
+  &__input:checked ~ &__radio::after,
+  &__input:checked ~ &__checkbox::after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 8px;
+    height: 8px;
+    background: white;
+  }
+  &__input:checked ~ &__checkbox::after {
+    border-radius: 0;
+  }
+  &__input:checked ~ &__radio::after {
+    border-radius: 50%;
+  }
+}
+
+.form-switch {
+  &__content {
+    width: 100%;
+  }
+
+  &__select {
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+}
+
+/* Form buttons */
+
+//btn-default
+.SemanticTreeInput--browseButton.btn-default,
+.cardinality-support__single-instance > .cardinality-support__remove-value {
+
+  color: $color-dark;
+  border: none;
+  font-size: 13px;
+  background-color: transparent;
+
+  min-height: $input-height;
+  height: 100%;
+  margin: 0;
+  padding: 0 10px;
+
+}
+
+.field-editor__delete-label-button.btn-default,
+.field-editor__row .btn-default:not(.SemanticTreeInput--browseButton)  {
+
+  color: $color-dark;
+  border: 1px solid $input-border-color;
+  font-size: 13px;
+  background-color: $input-color-bg;
+
+  min-height: $input-height;
+  height: 100%;
+  margin-left: 2px;
+  padding: 0 10px;
+
+}
+
+.semantic-form {
+
+  // so nested form modal dialog is fully contained inside semantic-form
+  position: relative;
+  .modal, .modal-backdrop {
+    position: absolute;
+  }
+  .modal-dialog {
+    width: 100%;
+    margin: 0;
+    padding: 15px;
+  }
+
+  .btn-group .btn + .btn, 
+  .btn-group .btn + .btn-group, 
+  .btn-group .btn-group + .btn, 
+  .btn-group .btn-group + .btn-group {
+
+    margin-left: 4px;
+  }
+
+  .btn-group {
+
+    margin-top: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .btn-form-actions {
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+
+    button.btn.btn-default {
+      margin: 0;
+    }
+  }
+ 
+  & .form-control,
+  & .SemanticTreeInput--inputAndButtons,
+  & .plain-text-field textarea.plain-text-field__text,
+  & .Select-control,
+  & .DragAndDropInput--itemArea,
+  & .form-group {
+
+    font-size: 14.5px;
+    letter-spacing: 0.1px;
+  }
+
+  & .form-control,
+  & .plain-text-field textarea.plain-text-field__text,
+  & .Select-control,
+  & .form-group,
+  .clearable-input {
+
+    border: none;
+  }
+
+  .FileManager--FileUploader > div {
+
+    border: none !important;
+  }
+  
+} 

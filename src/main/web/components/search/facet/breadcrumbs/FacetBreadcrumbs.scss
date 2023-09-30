@@ -1,0 +1,101 @@
+/**
+ * ResearchSpace
+ * Copyright (C) 2015-2020, © Trustees of the British Museum
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import '~basic-styles.scss';
+@import '../../commons/variables.scss';
+
+$rs-button-size: 38px;
+$rs-button-arrow-border: $rs-button-size * 0.74;
+
+$rs-breadcrumbs-scale: 0.74;
+$rs-breadcrumb-button-size: $rs-button-size * $rs-breadcrumbs-scale;
+$rs-breadcrumb-arrow-border: $rs-button-arrow-border * $rs-breadcrumbs-scale;
+$rs-breadcrumb-arrow-top: $rs-arrow-top * $rs-breadcrumbs-scale;
+$rs-breadcrumb-arrow-side: $rs-arrow-side * $rs-breadcrumbs-scale;
+
+.breadcrumbs {
+  min-height: $rs-button-size;
+  margin: $padding-base-vertical 0;
+  margin-top: 0;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 (-$padding-base-horizontal / 2);
+}
+
+.conjunct {
+  background-color: $color-tag-bg;
+  color: $color-tag;
+  display: flex;
+  margin: 0 ($padding-base-horizontal / 2) $padding-base-vertical;
+  border-radius: 3px;
+
+  &:hover,
+  &:focus,
+  &:focus-within {
+
+    background-color: $color-tagHover-bg;
+  }
+}
+
+.values {
+
+  padding: ($padding-base-horizontal / 2) $padding-base-horizontal;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.relation {
+  margin-right: 6px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.disjunct,
+.or {
+  margin: 0 2px;
+}
+
+.or {
+  opacity: 0.6;
+  margin: 0 3px;
+}
+
+.cancelButton {
+
+  background-color: inherit;
+  border: none;
+  font-size: 13px;
+  line-height: 1.2;
+  letter-spacing: 0.6px;
+
+  padding-right: 7px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+
+  & > i {
+    @include icon(remove);
+  }
+}

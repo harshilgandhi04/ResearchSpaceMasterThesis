@@ -1,0 +1,84 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "Iri": {
+            "properties": {
+                "_value": {
+                    "type": "string"
+                },
+                "termType": {
+                    "enum": [
+                        "NamedNode"
+                    ],
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            },
+            "propertyOrder": [
+                "termType",
+                "equals",
+                "toString",
+                "toJSON",
+                "_value",
+                "value",
+                "hashCode",
+                "cata",
+                "isIri",
+                "isLiteral",
+                "isBnode"
+            ],
+            "required": [
+                "_value",
+                "termType",
+                "value"
+            ],
+            "type": "object"
+        }
+    },
+    "properties": {
+        "allowDelete": {
+            "description": "True if allowed to delete the annotation; otherwise false",
+            "type": "boolean"
+        },
+        "allowEdit": {
+            "description": "True if allowed to edit the annotation; otherwise false",
+            "type": "boolean"
+        },
+        "color": {
+            "description": "Accent color for annotation type (user-defined or computed from type IRI)",
+            "type": "string"
+        },
+        "iconUrl": {
+            "description": "User-defined icon URL for annotation type",
+            "type": "string"
+        },
+        "iri": {
+            "$ref": "#/definitions/Iri",
+            "description": "IRI of the annotation"
+        },
+        "type": {
+            "$ref": "#/definitions/Iri",
+            "description": "Type of the annotation (if known)"
+        }
+    },
+    "propertyOrder": [
+        "iri",
+        "type",
+        "color",
+        "iconUrl",
+        "allowEdit",
+        "allowDelete"
+    ],
+    "required": [
+        "allowDelete",
+        "allowEdit",
+        "color",
+        "iconUrl",
+        "iri",
+        "type"
+    ],
+    "type": "object"
+}
+

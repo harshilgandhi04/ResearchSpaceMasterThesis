@@ -1,0 +1,46 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "properties": {
+        "data": {
+            "description": "Data that will be sent to all targets"
+        },
+        "id": {
+            "description": "Identifier which will be used as event source id.",
+            "type": "string"
+        },
+        "on": {
+            "default": [
+                "click"
+            ],
+            "description": "Array of actions to trigger event.\n\nCan be \"hover\" or \"click\" or both.",
+            "items": {
+                "type": "string"
+            },
+            "type": "array"
+        },
+        "targets": {
+            "description": "Ids of the components that this event should be send to.\nWhen empty event is broadcasted to all listeners.",
+            "items": {
+                "type": "string"
+            },
+            "type": "array"
+        },
+        "type": {
+            "description": "Type of the event to trigger.",
+            "type": "string"
+        }
+    },
+    "propertyOrder": [
+        "id",
+        "type",
+        "targets",
+        "data",
+        "on"
+    ],
+    "required": [
+        "id",
+        "type"
+    ],
+    "type": "object"
+}
+
