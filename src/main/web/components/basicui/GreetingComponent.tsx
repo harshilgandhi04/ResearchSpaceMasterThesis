@@ -47,13 +47,36 @@ export class GreetingComponent extends Component<GreetingComponentProps, Greetin
 
       const translationregex = /['"]([^'"]+)['"]/g;
       const matches = this.state.addition.match(translationregex);
+      let translation2 = null;
+      let leftPart = this.state.addition;
+      let rightPart = null;
       if(matches==null){
         addNotification({
           message: "Did you really include quotes(\", ') ?",
           level: 'error',
         });
       }
+    /*else if(matches.length > 1){
+      translation2 = matches ? matches[1].slice(1, -1) : null;
+      console.log(translation2);
+
+      if(this.state.addition.includes("and")){
+          let parts = this.state.addition.split("and");
+          leftPart = parts[0].trim();
+          rightPart = parts[1].trim();
+          console.log("Left side:", leftPart);   
+          console.log("Right side:", rightPart);
+      }
       else{
+        addNotification({
+          message: "Did you forget to include an 'and' ?",
+          level: 'error',
+        });
+      }
+    }*/
+      
+      else{
+        console.log(window.globalCategory)
         
         const result = await performOperations(this.state.addition);
         this.setState({isLoading:false, manipulatedData: result });
@@ -73,11 +96,12 @@ export class GreetingComponent extends Component<GreetingComponentProps, Greetin
   };
 
   render() {
-    //console.log("pranay")
+
     //console.log(this.state.addition)
     //console.log(this.state.updated)
     const { manipulatedData, isLoading } = this.state;
     const { errorquery } = this.state;
+    
 
     if (isLoading) {
       return <Spinner />;
@@ -86,6 +110,10 @@ export class GreetingComponent extends Component<GreetingComponentProps, Greetin
         <div style={{marginTop:30, textAlign: 'center'}}><h1>What would you like to search?</h1>       
         
         <input type="text" placeholder='Enter your text here' className="form-control" style={{marginLeft: 550, marginTop: 30, width: 700, textAlign: 'center'}} id="queryInputBox" onChange={this.onAdditionChange} />
+        
+        <button type="button" className="btn btn-primary" style={{marginLeft: 20, marginTop: 50, marginBottom: 50}} onClick={this.handleButtonClick}>Submit Query</button>
+        </div>
+        <AutogenSparqlQueryEditor autogenQuery={manipulatedData} > </AutogenSparqlQueryEditor>
         <OverlayComponent title="Guidelines" type="modal" bs-size="large">
           <OverlayTrigger><button className="btn btn-secondary">Show Guidelines</button></OverlayTrigger>
             <OverlayContent>
@@ -113,10 +141,7 @@ export class GreetingComponent extends Component<GreetingComponentProps, Greetin
               </ul>
             </OverlayContent>
         </OverlayComponent>
-        <button type="button" className="btn btn-primary" style={{marginLeft: 20, marginTop: 50, marginBottom: 50}} onClick={this.handleButtonClick}>Submit Query</button>
-        </div>
-        <AutogenSparqlQueryEditor autogenQuery={manipulatedData}> </AutogenSparqlQueryEditor>
-        {/*   <Text2 /> */ }
+        
       </div>);
       }
   }

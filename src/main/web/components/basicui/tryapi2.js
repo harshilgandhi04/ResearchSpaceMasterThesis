@@ -1,4 +1,5 @@
 import { ManipulateTheQuery } from "./StringManipulation";
+import { ManipulateTheQuery1 } from "./StringManipulation1";
 
 export const performOperations = async (inputData) => {
     inputData= inputData+" without using PREFIX"
@@ -42,7 +43,7 @@ export const performOperations = async (inputData) => {
         const data = await response.json();
         let result = data['generations'][0]['text'];
         console.log(result);
-        const modifiedQuery1 = await ManipulateTheQuery(result, inputData);
+        const modifiedQuery1 = await ManipulateTheQuery1(result, inputData);
         return modifiedQuery1
     }
     catch (error) {

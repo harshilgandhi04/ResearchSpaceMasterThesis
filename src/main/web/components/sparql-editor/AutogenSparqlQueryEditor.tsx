@@ -27,6 +27,7 @@ import * as _ from 'lodash';
 import * as SparqlJs from 'sparqljs';
 
 import { SparqlClient, SparqlUtil, QueryContext } from 'platform/api/sparql';
+import { requestAsProperty } from 'platform/api/async';
 import { getCurrentUrl } from 'platform/api/navigation';
 import { ContextTypes, ComponentContext, SemanticContextProvider } from 'platform/api/components';
 import { Cancellation } from 'platform/api/async';
@@ -49,15 +50,22 @@ import * as styles from './SparqlQueryEditor.scss';
 import 'yasgui-yasr/dist/yasr.css';
 
 export interface SparqlQueryEditorProps {
-  autogenQuery?: string
+  autogenQuery?: string;
+}
+
+declare global {
+  interface Window {
+    globalCategory: string; // Define your global variable and its type here
+  }
 }
 
 interface State {
-  readonly isExecuting?: boolean;
-  readonly alertState?: Data.Maybe<AlertConfig>;
-  readonly query?: string;
-  readonly repositoryStatus?: Immutable.Map<string, boolean>;
-  readonly selectedRepository?: string;
+  isExecuting?: boolean;
+  alertState?: Data.Maybe<AlertConfig>;
+  query?: string;
+  repositoryStatus?: Immutable.Map<string, boolean>;
+  selectedRepository?: string;
+  transVariable: string;
 }
 
 export class AutogenSparqlQueryEditor extends Component<SparqlQueryEditorProps, State> {
@@ -78,6 +86,8 @@ export class AutogenSparqlQueryEditor extends Component<SparqlQueryEditorProps, 
       alertState: Nothing<AlertConfig>(),
       selectedRepository: getCurrentUrl().search(true)['repository'],
       query: props.autogenQuery,
+      transVariable: ''
+      
     };
     //console.log("chiara");
     //console.log(this.state);
@@ -221,20 +231,20 @@ export class AutogenSparqlQueryEditor extends Component<SparqlQueryEditorProps, 
     //console.log("chichi");
     //console.log(this.context);
     //console.log(queryEditorContext);
-    queryEditorContext.setQuery(this.props.autogenQuery, {silent: true});
-    this.setState({ query: this.props.autogenQuery});
-    // const contextQuery = queryEditorContext.getQuery();
-    // const initialQuery = contextQuery.getOrElse(this.editor.getQuery().value);
-    // if (contextQuery.isNothing) {
-    //   queryEditorContext.setQuery(initialQuery, { silent: true });
-    // }
-    // this.setState({ query: initialQuery });
+    queryEditorContext.setQuery("SELECT distinct ?obj WHERE {?sub a <http://www.cidoc-crm.org/cidoc-crm/E41_Appellation> . ?sub <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> ?obj . }", {silent: true});
+    this.setState({ query: "SELECT distinct ?obj WHERE {?sub a <http://www.cidoc-crm.org/cidoc-crm/E41_Appellation> . ?sub <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> ?obj . }"});
+    const contextQuery = queryEditorContext.getQuery();
+    const initialQuery = contextQuery.getOrElse(this.editor.getQuery().value);
+    if (contextQuery.isNothing) {
+      queryEditorContext.setQuery(initialQuery, { silent: true });
+    }
+    this.setState({ query: initialQuery });
 
     // if a query is supplied via request parameter,
     // we are going to execute it after the component has been mounted
-    // if (getCurrentUrl().hasSearch('query')) {
-    //   this.executeQuery(initialQuery);
-    // }
+    if (getCurrentUrl().hasSearch('query')) {
+       this.executeQuery(initialQuery);
+    }
 
     this.cancellation.map(queryEditorContext.queryChanges).onValue(({ query, repository }) => {
       this.setState({
@@ -280,8 +290,15 @@ export class AutogenSparqlQueryEditor extends Component<SparqlQueryEditorProps, 
   private sendSparqlQuery = (query: SparqlJs.SparqlQuery, queryType: string) => {
     SparqlClient.sparqlQuery(query, SparqlClient.stringToSparqlQueryForm[queryType], this.getQueryContext()).onAny(
       (event) => {
+        
         if (event.type === 'value') {
           this.yasr.setResponse(event.value);
+
+          this.setState({transVariable: event.value})
+          console.log(this.state.transVariable)
+          window.globalCategory = this.state.transVariable;
+          console.log(window.globalCategory)
+
           this.setState({
             alertState: Nothing<AlertConfig>(),
             isExecuting: false,
@@ -299,6 +316,7 @@ export class AutogenSparqlQueryEditor extends Component<SparqlQueryEditorProps, 
         }
       }
     );
+    
   };
 
   private confirmAndExecuteSparqlUpdate(query: SparqlJs.SparqlQuery) {
