@@ -42,3 +42,10 @@ src/main/webapp/assets/bundles-manifest.json
 # Mac
 .DS_Store
 package-lock.json
+package-lock.json
+src/main/python/app/__pycache__/__init__.cpython-311.pyc
+src/main/python/app/routes/__pycache__/__init__.cpython-311.pyc
+src/main/python/app/routes/__pycache__/delimited_file_upload_controller.cpython-311.pyc
+src/main/python/scripts/__pycache__/__init__.cpython-311.pyc
+src/main/python/scripts/__pycache__/delimited_to_rdf.cpython-311.pyc
+src/main/webapp/assets/bundles-manifest.json
