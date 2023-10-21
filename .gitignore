@@ -49,3 +49,8 @@ src/main/python/app/routes/__pycache__/delimited_file_upload_controller.cpython-
 src/main/python/scripts/__pycache__/__init__.cpython-311.pyc
 src/main/python/scripts/__pycache__/delimited_to_rdf.cpython-311.pyc
 src/main/webapp/assets/bundles-manifest.json
+src/main/python/app/routes/__pycache__/recommend_images.cpython-311.pyc
+src/main/python/features/image_features.pth
+src/main/python/features/image_features.pth__backup
+src/main/python/scripts/__pycache__/clip_open_source.cpython-311.pyc
+src/main/python/scripts/__pycache__/deepltranslator.cpython-311.pyc
