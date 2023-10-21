@@ -166,6 +166,20 @@
           </semantic-if>
         {{/if}}
 
+        {{#if (hasKey allTypes "http://www.cidoc-crm.org/cidoc-crm/E1_CRM_Entity")}}
+        <semantic-if query='ASK { <{{iri}}> ?p ?value . }'>
+            <template id='then'>
+              <div class="rs-default-card__hover-icon">
+                <semantic-link-container uri='{{iri}}'>
+                    <button type="button" class="rs-button" title="Explore Deets">
+                        <i class="iconmoon iconmoon-location"></i>
+                    </button>
+                </semantic-link-container>
+              </div>
+            </template>
+          </semantic-if>
+        {{/if}}
+
         {{#if (hasKey allTypes "http://www.researchspace.org/ontology/EX_Digital_Image_Region")}}
           [[!-- don't show resource media icon for image regions --]]
         {{else}}
@@ -282,7 +296,7 @@
         
 <!-- Card Footer with Object Titles (ja and English) and Artist -->
 <div class="rs-default-card__footer"
-    style="padding:{{#if footer-paddingY}}{{footer-paddingY}}{{else}}11{{/if}}px {{#if footer-paddingX}}{{footer-paddingX}}{{else}}12{{/if}}px;">
+    style="padding:{{#if footer-paddingY}}{{footer-paddingY}}{{else}}9{{/if}}px {{#if footer-paddingX}}{{footer-paddingX}}{{else}}12{{/if}}px;">
     <div class="rs-default-card__footer-titles">
         [[#if customFooter]]
           [[#block "customFooter"]][[/block]]

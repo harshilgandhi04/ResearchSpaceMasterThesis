@@ -32,6 +32,7 @@
 
   "semantic-search": "platform/components/semantic/search/web-components/SemanticSearch.ts",
   "semantic-search-query-keyword": "platform/components/semantic/search/web-components/KeywordSearch.tsx",
+  "keywordsearch": "platform/components/semantic/search/web-components/KeywordSearchTry.tsx",
   "semantic-search-query-entities": "platform/components/semantic/search/web-components/EntitySearch.tsx",
   "semantic-search-query-constant": "platform/components/semantic/search/web-components/QueryConstant.tsx",
   "semantic-search-result": "platform/components/semantic/search/web-components/SemanticSearchResult.tsx",

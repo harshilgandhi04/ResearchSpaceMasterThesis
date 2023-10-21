@@ -2,18 +2,18 @@ import { ManipulateTheQuery } from "./StringManipulation";
 import { ManipulateTheQuery1 } from "./StringManipulation1";
 
 export const performOperations = async (inputData) => {
-    inputData= inputData+" without using PREFIX"
+    let inputData1= inputData+" without using PREFIX"
     const regex = /\b(Find|Get|Give)\b/gi;
     //const wordmatch =/\ben(glish)?\b/gi;
     const replacement = "Write a SPARQL query for ";
     let modifiedQuery1 ="";
     let modifiedString =""; 
-    if(inputData.toLowerCase().includes('find') || inputData.toLowerCase().includes('get') || inputData.toLowerCase().includes('what')){
-        modifiedString = inputData.replace(regex, replacement);
+    if(inputData1.toLowerCase().includes('find') || inputData1.toLowerCase().includes('get') || inputData1.toLowerCase().includes('what')){
+        modifiedString = inputData1.replace(regex, replacement);
         console.log(modifiedString);
     }
     else{
-        modifiedString = replacement + inputData;
+        modifiedString = replacement + inputData1;
         console.log(modifiedString);
     }
     
@@ -43,7 +43,7 @@ export const performOperations = async (inputData) => {
         const data = await response.json();
         let result = data['generations'][0]['text'];
         console.log(result);
-        const modifiedQuery1 = await ManipulateTheQuery1(result, inputData);
+        const modifiedQuery1 = await ManipulateTheQuery(result, inputData);
         return modifiedQuery1
     }
     catch (error) {

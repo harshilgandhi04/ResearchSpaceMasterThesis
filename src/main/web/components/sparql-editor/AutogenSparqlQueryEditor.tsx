@@ -48,10 +48,11 @@ import { ContextTypes as EditorContextTypes, ComponentContext as EditorContext }
 
 import * as styles from './SparqlQueryEditor.scss';
 import 'yasgui-yasr/dist/yasr.css';
+import { VisibilityEdge } from 'webcola';
 
 export interface SparqlQueryEditorProps {
   autogenQuery?: string;
-}
+  }
 
 declare global {
   interface Window {
@@ -94,12 +95,16 @@ export class AutogenSparqlQueryEditor extends Component<SparqlQueryEditorProps, 
     //console.log(this.context);
     // context.queryEditorContext = new ;
     context.queryEditorContext.setQuery(this.state.query, {silent: true});
+    console.log("Checking here: ", this.state.query)
   }
 
   componentDidUpdate(previousProps, previousState) {
     //console.log("bauer2");
     if(this.props.autogenQuery != previousProps.autogenQuery){
       this.setState({ query: this.props.autogenQuery});
+      if (getCurrentUrl().hasSearch('query')) {
+        this.executeQuery(this.props.autogenQuery);
+     }
     }
     //console.log(this.props.autogenQuery);
     //console.log(this.state.query);
@@ -114,13 +119,13 @@ export class AutogenSparqlQueryEditor extends Component<SparqlQueryEditorProps, 
         <Col componentClass="div" md={12}>
           <SparqlEditor
             ref={(editor) => (this.editor = editor)}
-            backdrop={this.state.isExecuting}
+            backdrop={false}
             query={this.state.query}
             onChange={(query) => {
               this.context.queryEditorContext.setQuery(query.value, { silent: true });
-              console.log(query.value)
+              //console.log(query.value)
               this.setState({ query: this.props.autogenQuery });
-              console.log(query)
+              //console.log(query)
             }}
             autocompleters={['variables', 'prefixes']}
             persistent={() => 'sparqlEndpoint'}
@@ -231,18 +236,22 @@ export class AutogenSparqlQueryEditor extends Component<SparqlQueryEditorProps, 
     //console.log("chichi");
     //console.log(this.context);
     //console.log(queryEditorContext);
-    queryEditorContext.setQuery("SELECT distinct ?obj WHERE {?sub a <http://www.cidoc-crm.org/cidoc-crm/E41_Appellation> . ?sub <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> ?obj . }", {silent: true});
-    this.setState({ query: "SELECT distinct ?obj WHERE {?sub a <http://www.cidoc-crm.org/cidoc-crm/E41_Appellation> . ?sub <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> ?obj . }"});
-    const contextQuery = queryEditorContext.getQuery();
+    if(!this.state.query.startsWith('SELECT ?Term')){
+    queryEditorContext.setQuery("SELECT distinct ?Categories WHERE {?sub a <http://www.cidoc-crm.org/cidoc-crm/E41_Appellation> . ?sub <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> ?Categories . }", {silent: true});
+    this.setState({ query: "SELECT distinct ?Categories WHERE {?sub a <http://www.cidoc-crm.org/cidoc-crm/E41_Appellation> . ?sub <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> ?Categories . }"});
+    }const contextQuery = queryEditorContext.getQuery();
     const initialQuery = contextQuery.getOrElse(this.editor.getQuery().value);
+    console.log("Initial: ", initialQuery)
     if (contextQuery.isNothing) {
       queryEditorContext.setQuery(initialQuery, { silent: true });
     }
     this.setState({ query: initialQuery });
+    console.log(initialQuery)
 
     // if a query is supplied via request parameter,
     // we are going to execute it after the component has been mounted
-    if (getCurrentUrl().hasSearch('query')) {
+    console.log(getCurrentUrl())
+    if (getCurrentUrl().path().includes("/Start")) {
        this.executeQuery(initialQuery);
     }
 
@@ -293,12 +302,13 @@ export class AutogenSparqlQueryEditor extends Component<SparqlQueryEditorProps, 
         
         if (event.type === 'value') {
           this.yasr.setResponse(event.value);
-
-          this.setState({transVariable: event.value})
-          console.log(this.state.transVariable)
-          window.globalCategory = this.state.transVariable;
-          console.log(window.globalCategory)
-
+          if(this.state.transVariable == '' && event.value.includes('Categories')){
+            this.setState({transVariable: event.value})
+            //console.log(this.state.transVariable)
+            window.globalCategory = this.state.transVariable;
+            //this.props.varipass = window.globalCategory
+            console.log(window.globalCategory)
+          }
           this.setState({
             alertState: Nothing<AlertConfig>(),
             isExecuting: false,

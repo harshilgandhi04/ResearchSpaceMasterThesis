@@ -1,3 +1,5 @@
+import { array } from "prop-types";
+import Fuse from 'fuse.js';
 
 export const ManipulateTheQuery = async (query, inputData) => {
     let result = query.slice(1);
@@ -14,27 +16,34 @@ export const ManipulateTheQuery = async (query, inputData) => {
     //if (translation1 == null){
      //   return "Did you really include quotes(\", ') ?"
     //}
-    if(matches.length > 1){
-        translation2 = matches ? matches[1].slice(1, -1) : null;
-        console.log(translation2);
-    }
+    let modifiedQuery1 ="";
 
-    if(inputData.includes("and")){
+    if(inputData.includes("and") && matches.length > 1){
         let parts = inputData.split("and");
         leftPart = parts[0].trim();
         rightPart = parts[1].trim();
         console.log("Left side:", leftPart);   
         console.log("Right side:", rightPart);
+        translation2 = matches ? matches[1].slice(1, -1) : null;
+        console.log(translation2);
+    }
+    else if(inputData.includes("and") && matches.length < 2){
+        modifiedQuery1 = "Did you really add quotes?"
+        return modifiedQuery1
+    }
+    else if(matches.length>1 && !inputData.includes("and")){
+        modifiedQuery1 = "Did you miss an 'and'?"
+        return modifiedQuery1
     }
 
-    let modifiedQuery1 ="";
+    
     let finalquery ='';
 
-    let extractedstring = '';
+    let extractedstring = '?Term', newextractedstring= '?Term', newextractedstring1 = '?Term';
     let startDelimiter = '?';
     const endDelimiter1 = ' ';
     const endDelimiter2 = '\n'
-    let wherefinder = "W";
+    let wherefinder = "WH";
     let brackfinder = result.indexOf('}');
     console.log(brackfinder)
     if (brackfinder== -1){
@@ -61,11 +70,8 @@ export const ManipulateTheQuery = async (query, inputData) => {
     console.log("End pos: ", endDelimiter);
     if (startIndex !== -1 && endDelimiter !== -1) {
         extractedstring = result.slice(startIndex + startDelimiter.length, endDelimiter);
-        if (extractedstring != 's') {
-            extractedstring = 's';
-            //console.log(result)
-        }
-        result =result.slice(startIndex-7, startIndex+1) + extractedstring + ' ' +result.slice(result.indexOf(wherefinder), brackfinder+1);
+        extractedstring = '?Term';
+        result =result.slice(startIndex-7, startIndex) + extractedstring + ' ' +result.slice(result.indexOf(wherefinder), brackfinder+1);
         
         console.log(result)
 
@@ -74,146 +80,150 @@ export const ManipulateTheQuery = async (query, inputData) => {
         console.log("Not found!")
     }
 
-    const graphURI = 'http://www.harshil.org/pythonscriptdata/graph';
-    const modifiedQuery = result.replace('WHERE', `FROM <${graphURI}> WHERE`);
+    //const graphURI = 'http://www.harshil.org/pythonscriptdata/graph';
+    //const modifiedQuery = result.replace('WHERE', `FROM <${graphURI}> WHERE`);
     const regex = /{([^}]+)}/g;
     let quotedData;
     //let quotedData = "FILTER (STRSTARTS(?o, '„') && STRENDS(?o, '" + translation + "“'))\n"
     //console.log(quotedData);
+    let categoryfinder = "\n?Term <http://www.cidoc-crm.org/cidoc-crm/P3_has_note> ?CategoryReference .\n"
+    let categoryfinder1 = "\n?Term <http://www.cidoc-crm.org/cidoc-crm/P3_has_note> ?CategoryReference1 .\n"
+
+    const options = {
+        keys: ['name'], // Specify the key to search within the objects (in this case, 'name').
+        includeScore: true, // This allows you to get a score for each result.
+        includeMatches: true, // This will provide information about which characters matched.
+        threshold: 0.3, // Adjust the threshold to control fuzziness (0.0 being very fuzzy, 1.0 being exact match).
+        ignoreLocation: true, // This makes it case-insensitive.
+      
+    };
+
+    
+
     
     
     quotedData = "FILTER (regex(STR(?o1), '" + translation1 + "', 'i'))";
-
-    if(leftPart.toLowerCase().includes('author') || leftPart.toLowerCase().includes('fragment')){
-        // expression to match "category" as standalone words (case-insensitive)
-        finalquery = "\n   ?" +extractedstring + " <http://localhost:10214/AuthorAndFragment> ?o1 .\n" + quotedData;
-        modifiedQuery1= modifiedQuery.replace(regex, (match, content) => `{${finalquery}}`);
-        console.log(modifiedQuery1);
-    }    
-    else if (/\ben(glish)?\b/gi.test(modifiedQuery) || leftPart.toLowerCase().includes('english')) {
-        // Regular expression to match "en" or "english" as standalone words (case-insensitive)
-        finalquery = "\n   ?" +extractedstring + " <http://localhost:10214/EnglishTranslation> ?o1 .\n" + quotedData;
-        modifiedQuery1= modifiedQuery.replace(regex, (match, content) => `{${finalquery}}`);
-        console.log(modifiedQuery1);
-    }
-    else if (/\bid?\b/gi.test(modifiedQuery) || leftPart.toLowerCase().includes('id')) {
-        // Regular expression to match "id" as standalone words (case-insensitive)
-        finalquery = "\n   ?" +extractedstring + " <http://localhost:10214/ID> ?o1 .\n" + quotedData;
-        modifiedQuery1= modifiedQuery.replace(regex, (match, content) => `{${finalquery}}`);
-        console.log(modifiedQuery1);
-    }
-    else if (/\b(de|deutsch|deutsche|german)\b/gi.test(modifiedQuery) || leftPart.toLowerCase().includes('german')) {
-        // Regular expression to match "de" or "deutsche" or "german" as standalone words (case-insensitive)
-        finalquery = "\n   ?" +extractedstring + " <http://localhost:10214/GermanTranslation> ?o1 .\n" + quotedData;
-        modifiedQuery1= modifiedQuery.replace(regex, (match, content) => `{${finalquery}}`);
-        console.log(modifiedQuery1);
-    }
-    else if(leftPart.toLowerCase().includes('category')){
-        // expression to match "category" as standalone words (case-insensitive)
-        finalquery = "\n   ?" +extractedstring + " <http://localhost:10214/Category> ?o1 .\n" + quotedData;
-        modifiedQuery1= modifiedQuery.replace(regex, (match, content) => `{${finalquery}}`);
-        console.log(modifiedQuery1);
-    }
-    else if(leftPart.toLowerCase().includes('italian')){
-        // expression to match "category" as standalone words (case-insensitive)
-        finalquery = "\n   ?" +extractedstring + " <http://localhost:10214/ItalianTranslation> ?o1 .\n" + quotedData;
-        modifiedQuery1= modifiedQuery.replace(regex, (match, content) => `{${finalquery}}`);
-        console.log(modifiedQuery1);
-    }
-    else if(leftPart.toLowerCase().includes('literature')){
-        // expression to match "category" as standalone words (case-insensitive)
-        finalquery = "\n   ?" +extractedstring + " <http://localhost:10214/Literature> ?o1 .\n" + quotedData;
-        modifiedQuery1= modifiedQuery.replace(regex, (match, content) => `{${finalquery}}`);
-        console.log(modifiedQuery1);
-    }
-    else if(leftPart.toLowerCase().includes('volume')){
-        // expression to match "category" as standalone words (case-insensitive)
-        finalquery = "\n   ?" +extractedstring + " <http://localhost:10214/Volume> ?o1 .\n" + quotedData;
-        modifiedQuery1= modifiedQuery.replace(regex, (match, content) => `{${finalquery}}`);
-        console.log(modifiedQuery1);
-    }
-    else if(leftPart.toLowerCase().includes('annotation')){
-        // expression to match "category" as standalone words (case-insensitive)
-        finalquery = "\n   ?" +extractedstring + " <http://localhost:10214/Annotation> ?o1 .\n" + quotedData;
-        modifiedQuery1= modifiedQuery.replace(regex, (match, content) => `{${finalquery}}`);
-        console.log(modifiedQuery1);
-    }
-    else{
-        modifiedQuery1 = "We had some trouble generating the query. Click on Show Guidelines for information"
-    }
     
+    /*const data = JSON.parse(window.globalCategory)
+    //console.log(data)
+    const results = data.results;
+    //console.log(results)
+    const bindings = results.bindings;
+    let terms = bindings.map(binding => binding.Categories.value);*/
+    let terms =[
+        "AuthorAndFragment",
+        "Category",
+        "GermanTranslation",
+        "Annotation",
+        "ItalianTranslation",
+        "Literature",
+        "Volume",
+        "EnglishTranslation"
+    ]
+    console.log(terms)
+
+    const fuse = new Fuse(terms.map(term => ({ name: term })), options);
+    console.log("Fuse: ",fuse)
+    let matchedterm;
+
+    const wordsfoundleftt = leftPart.match(/\w+/g);
+    let wordsfoundleft;
+    if(wordsfoundleftt!==null){
+    wordsfoundleft = wordsfoundleftt.filter(item => item !== translation1)
+    console.log("words in string", wordsfoundleft)
+    for(const word of wordsfoundleft){
+        //console.log("Word in array", word)
+        matchedterm = terms.find(term => term.toLowerCase().includes(word.toLowerCase()))
+        console.log("matched term: ", matchedterm)
+        if(matchedterm){
+            console.log(matchedterm)
+            finalquery = categoryfinder + `?CategoryReference <http://www.cidoc-crm.org/cidoc-crm/P190_has_symbolic_content> ?${matchedterm} .\nFILTER (regex(STR(?${matchedterm}), '${translation1}', 'i'))`;
+            modifiedQuery1= result.replace(regex, (match, content) => `{${finalquery}}`);
+            newextractedstring = `?Term ?${matchedterm}`
+            modifiedQuery1 = modifiedQuery1.replace(extractedstring, newextractedstring);
+            console.log(modifiedQuery1)
+            break
+        }
+    }
+    if(!matchedterm){
+    for(const word of wordsfoundleft){
+            const results1 = fuse.search(word);
+            console.log(results1)
+            let resfound;
+            if (results1.length > 0) {
+                // Display the results or use them as needed.
+                results1.forEach(result => {
+                  console.log(result.item.name);
+                  console.log("score: ", result.item.includeScore) // The matched term.
+                  resfound = result.item.name
+                });
+                finalquery = categoryfinder + `?CategoryReference <http://www.cidoc-crm.org/cidoc-crm/P190_has_symbolic_content> ?${resfound} .\nFILTER (regex(STR(?${resfound}), '${translation1}', 'i'))`;
+                modifiedQuery1= result.replace(regex, (match, content) => `{${finalquery}}`);
+                newextractedstring = `?Term ?${resfound}`
+                modifiedQuery1 = modifiedQuery1.replace(extractedstring, newextractedstring);
+                break
+            }
+        }
+    }}
+    //console.log(modifiedQuery1)
+    if(modifiedQuery1 === '' || wordsfoundleft === ' '){
+        console.log("andar")
+        modifiedQuery1 = `PREFIX ns1: <http://www.cidoc-crm.org/cidoc-crm/> \nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \nSELECT ?Term WHERE {\n?Term rdfs:label ?label .\nFILTER(regex(STR(?label), '${translation1}', 'i'))}`
+    }
+
+    /*modifiedQuery1= result.replace(regex, (match, content) => `{}`);
+    modifiedQuery1 = modifiedQuery1.replace(extractedstring, newextractedstring);*/
+    console.log("Query 1: ", modifiedQuery1)
 
     let finalquery1;
     let modifiedQuery2;
     let quotedData1;
+    let matchedterm1;
     if(matches.length>1){
-        quotedData1 = "FILTER (regex(STR(?o1), '" + translation1 + "', 'i') && regex(STR(?o2), '" + translation2 + "', 'i'))";
-        if(rightPart.toLowerCase().includes('author') || rightPart.toLowerCase().includes('fragment')){
-            // expression to match "category" as standalone words (case-insensitive)
-
-            finalquery1 = "   ?" +extractedstring + " <http://localhost:10214/AuthorAndFragment> ?o2 .\n" + quotedData1;
-            modifiedQuery2 = modifiedQuery1.replace(quotedData, finalquery1);
-            //modifiedQuery2= modifiedQuery1.replace(regex, (match, content) => `{${finalquery}}`);
-            console.log(modifiedQuery2);
-        }    
-        else if (rightPart.toLowerCase().includes('english')) {
-            // Regular expression to match "en" or "english" as standalone words (case-insensitive)
-            finalquery1 = "   ?" +extractedstring + " <http://localhost:10214/EnglishTranslation> ?o2 .\n" + quotedData1;
-            modifiedQuery2 = modifiedQuery1.replace(quotedData, finalquery1);
-            console.log(modifiedQuery2);
+        const wordsfoundrightt = rightPart.match(/\w+/g);
+        let wordsfoundright;
+        if(wordsfoundrightt!==''){
+        wordsfoundright = wordsfoundrightt.filter(item => item !== translation2)
+        for(const word1 of wordsfoundright){
+            //console.log("Word in array", word1)
+            matchedterm1 = terms.find(term => term.toLowerCase().includes(word1.toLowerCase()))
+            if(matchedterm1){
+                console.log(matchedterm1)
+                finalquery1 = categoryfinder1 + `?CategoryReference1 <http://www.cidoc-crm.org/cidoc-crm/P190_has_symbolic_content> ?${matchedterm1} .\nFILTER (regex(STR(?${matchedterm1}), '${translation2}', 'i'))}`;
+                modifiedQuery2 = modifiedQuery1.replace('}', finalquery1);
+                newextractedstring1 = newextractedstring + ` ?${matchedterm1} `
+                //console.log("NEW string 1: ", newextractedstring1)
+                modifiedQuery2 = modifiedQuery2.replace(newextractedstring, newextractedstring1)
+                console.log("Query 2: ", modifiedQuery2)
+                return modifiedQuery2
+            }
         }
-        else if (rightPart.toLowerCase().includes('id')) {
-            // Regular expression to match "id" as standalone words (case-insensitive)
-            finalquery1 = "   ?" +extractedstring + " <http://localhost:10214/ID> ?o2 .\n" + quotedData1;
-            modifiedQuery2 = modifiedQuery1.replace(quotedData, finalquery1);
-            console.log(modifiedQuery2);
+        if(!matchedterm1){
+            for(const word1 of wordsfoundright){
+                const results2 = fuse.search(word1);
+                console.log(results2)
+                let resfound1;
+                if (results2.length > 0) {
+                    // Display the results or use them as needed.
+                    results2.forEach(result => {
+                      console.log("Found match: ", result.item.name); // The matched term.
+                      resfound1 = result.item.name
+                    });
+                    finalquery1 = categoryfinder1 + `?CategoryReference1 <http://www.cidoc-crm.org/cidoc-crm/P190_has_symbolic_content> ?${resfound1} .\nFILTER (regex(STR(?${resfound1}), '${translation2}', 'i'))}`;
+                    modifiedQuery2 = modifiedQuery1.replace('}', finalquery1);
+                    newextractedstring1 = newextractedstring + ` ?${resfound1} `
+                    modifiedQuery2 = modifiedQuery2.replace(newextractedstring, newextractedstring1);
+                    console.log("Query 2: ", modifiedQuery2)
+                    return modifiedQuery2
+                }
+            }
+        }}
+        if(modifiedQuery2===' '){
+            modifiedQuery2 =modifiedQuery1.replace('}',`\n?Term ?obj1 ?pre1 .\n FILTER(regex(STR(?pre1), '${translation2}', 'i'))}`)
+            return modifiedQuery2
         }
-        else if (rightPart.toLowerCase().includes('german')) {
-            // Regular expression to match "de" or "deutsche" or "german" as standalone words (case-insensitive)
-            finalquery1 = "   ?" +extractedstring + " <http://localhost:10214/GermanTranslation> ?o2 .\n" + quotedData1;
-            modifiedQuery2 = modifiedQuery1.replace(quotedData, finalquery1);
-            console.log(modifiedQuery2);
-        }
-        else if(rightPart.toLowerCase().includes('category')){
-            // expression to match "category" as standalone words (case-insensitive)
-            finalquery1 = "   ?" +extractedstring + " <http://localhost:10214/Category> ?o2 .\n" + quotedData1;
-            modifiedQuery2 = modifiedQuery1.replace(quotedData, finalquery1);
-            console.log(modifiedQuery2);
-        }
-        else if(rightPart.toLowerCase().includes('italian')){
-            // expression to match "category" as standalone words (case-insensitive)
-            finalquery1 = "   ?" +extractedstring + " <http://localhost:10214/ItalianTranslation> ?o2 .\n" + quotedData1;
-            modifiedQuery2 = modifiedQuery1.replace(quotedData, finalquery1);
-            console.log(modifiedQuery2);
-        }
-        else if(rightPart.toLowerCase().includes('literature')){
-            // expression to match "category" as standalone words (case-insensitive)
-            finalquery1 = "   ?" +extractedstring + " <http://localhost:10214/Literature> ?o2 .\n" + quotedData1;
-            modifiedQuery2 = modifiedQuery1.replace(quotedData, finalquery1);
-            console.log(modifiedQuery2);
-        }
-        else if(rightPart.toLowerCase().includes('volume')){
-            // expression to match "category" as standalone words (case-insensitive)
-            finalquery1 = "   ?" +extractedstring + " <http://localhost:10214/Volume> ?o2 .\n" + quotedData1;
-            modifiedQuery2 = modifiedQuery1.replace(quotedData, finalquery1);
-            console.log(modifiedQuery2);
-        }
-        else if(rightPart.toLowerCase().includes('annotation')){
-            // expression to match "category" as standalone words (case-insensitive)
-            finalquery1 = "   ?" +extractedstring + " <http://localhost:10214/Annotation> ?o2 .\n" + quotedData1;
-            modifiedQuery2 = modifiedQuery1.replace(quotedData, finalquery1);
-            console.log(modifiedQuery2);
-        }
-        else{
-            modifiedQuery2 = "We had some trouble generating the query. Click on the icon for guidelines"
-        }
-        return modifiedQuery2;
-
     }
 
-
-
-    //console.log("Final Query: " + modifiedQuery1);
     return modifiedQuery1
 
 

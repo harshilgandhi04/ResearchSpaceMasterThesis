@@ -20,7 +20,7 @@
   <semantic-search-result-holder>
     <div data-flex-self="md-full">
       <semantic-search-facet-breadcrumbs></semantic-search-facet-breadcrumbs>
-      <semantic-search-result id='semantic-search-result'>
+      <!-- <semantic-search-result id='semantic-search-result'>
           <mp-sparql-result-counts id='semantic-search-result-count' query="SELECT DISTINCT ?subject {}"
                                   template='{{> template}}'
           >
@@ -30,10 +30,48 @@
               </div>
             </template>
           </mp-sparql-result-counts>
-      </semantic-search-result>
-      <bs-tabs default-active-key='4' unmount-on-exit=true id='search-results' animation=false class='tabs-right'>
+      </semantic-search-result> -->
+
+      <semantic-search-result>
+        [[#if (hasPermission "forms:ldp:*")]]
+          <mp-selection-action-choice id='Action' title='With selected ...' selection='item-selection-aggregator'>
+            <mp-create-set-action></mp-create-set-action>
+          </mp-selection-action-choice>
+        [[/if]]
+
+        <semantic-table
+          id='semantic-search-result-grid'
+          query='
+          SELECT DISTINCT ?subject ?iri WHERE {
+              BIND(?subject as ?iri) .
+          } ORDER BY ?subject
+          '
+          tuple-template='{{> gridItem }}',
+          options='{"showFilter":false, "resultsPerPage":9}'
+        >
+        <template id='gridItem'>
+          <div class='card-select-container'> 
+            [[#if (hasPermission "forms:ldp:*")]]
+            <div class='card-select-input'>
+              <mp-selection-toggle selection="item-selection-aggregator" tag="{{iri.value}}"></mp-selection-toggle>
+            </div>
+          [[/if]]
+            <mp-draggable iri='{{iri.value}}'>
+              <div class="rs-card-container">
+              {{#bind iri=iri.value}}
+                {{> rsp:itemCardTemplate}}
+              {{/bind}}
+              </div>
+            </mp-draggable>
+          </div>
+        </template>
+        </semantic-table>
+    </semantic-search-result>
+
+
+      <!-- <bs-tabs default-active-key='4' unmount-on-exit=true id='search-results' animation=false class='tabs-right'> -->
          
-          [[#if (hasPermission "forms:ldp:*")]]
+          <!-- [[#if (hasPermission "forms:ldp:*")]]
           <bs-tab event-key="1" title="Timeline" class="search-tab-timeline">
             <div>
                 <semantic-search-result>
@@ -93,9 +131,9 @@
                 </semantic-search-result-context>
             </div>
           </bs-tab>
-          [[/if]]
+          [[/if]] -->
 
-          <bs-tab event-key="2" title="Chart" class="search-tab-chart">
+          <!-- <bs-tab event-key="2" title="Chart" class="search-tab-chart">
             <semantic-search-result-context ranges='["http://www.w3.org/2004/02/skos/core#Concept", "http://www.cidoc-crm.org/cidoc-crm/E53_Place"]'>
               <semantic-search-result id='semantic-search-result-chart'>
               <mp-component-toolbar>
@@ -122,9 +160,9 @@
               </mp-component-toolbar>
               </semantic-search-result>
             </semantic-search-result-context>
-          </bs-tab>
+          </bs-tab> -->
 
-          <bs-tab event-key="3" title="Table" class="search-tab-table">
+          <!-- <bs-tab event-key="3" title="Table" class="search-tab-table">
             <semantic-search-result> 
                 <semantic-table id='semantic-search-result-table'
                                 query='SELECT DISTINCT ?subject ?iri ?typeLabel WHERE {
@@ -159,9 +197,9 @@
 
                 </semantic-table>
             </semantic-search-result>
-          </bs-tab>
+          </bs-tab> -->
 
-          <bs-tab event-key="4" title="Grid" class="search-tab-grid">
+          <!-- <bs-tab event-key="4" title="Grid" class="search-tab-grid">
             <semantic-search-result>
                 [[#if (hasPermission "forms:ldp:*")]]
                   <mp-selection-action-choice id='Action' title='With selected ...' selection='item-selection-aggregator'>
@@ -197,13 +235,13 @@
                 </template>
                 </semantic-table>
             </semantic-search-result>
-          </bs-tab>
+          </bs-tab> -->
 
-      </bs-tabs>
+      <!-- </bs-tabs> -->
 
-      <hr>
+      
 
-      <div class="semantic-search-results-actions pull-right" style="display: flex;">
+      <div class="semantic-search-results-actions pull-right" style="display: flex; margin-top: 50px;">
           <semantic-search-result>
             <mp-sparql-download id='csv-result' query="SELECT ?subject WHERE { }"
                                 header="text/csv"
