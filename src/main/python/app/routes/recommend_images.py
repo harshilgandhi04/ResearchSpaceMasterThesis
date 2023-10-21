@@ -4,26 +4,14 @@ import time
 from scripts.clip_open_source import get_top_n_images
 # import get_top_n_images from ../scripts/clip_open_source
 
-@app.route("/recommend_images", methods = ["POST", "OPTIONS"])
+@app.route("/recommend_images", methods = ["POST"])
 def post_image_names():
-
-    print("post images")
-    if request.method == 'OPTIONS':
-        response = make_response()
-        response.headers.add('Access-Control-Allow-Methods', 'POST')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-        return response
 
     # Get data from the POST request
     request_payload = request.json
     title = request_payload.get("title")
-    # print
-    print("title ")
-    print(title)
 
     rec_images_result = get_top_n_images(terms_list=[title])
-    print("recommended for "+title)
-    print(rec_images_result)
 
     # Extract file names and sort them by probabilities in decreasing order
     key = next(iter(rec_images_result))
@@ -31,8 +19,6 @@ def post_image_names():
     file_tuple = tuple(file_tuple)
 
     # file_tuple=tuple((i.strip().split("\\")[-1] for i in rec_images_result))
-    print("file tuple")
-    print(file_tuple)
 
     x = ["_file1.jpg","_file10.jpg","_file3.jpg"]
     y = [title+i for i in x]

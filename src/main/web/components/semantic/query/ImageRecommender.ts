@@ -48,7 +48,7 @@ interface ImageRecommederState {
     error?: any;
 }
 
-const FLASK_BASE_URL = "http://localhost:5004/";
+const FLASK_BASE_URL = "http://localhost:5000/";
 
 export type ImageRecommenderProps =  ImageRecommenderConfig & Props<ImageRecommender> & ComponentProps;
 

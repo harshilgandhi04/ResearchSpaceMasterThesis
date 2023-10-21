@@ -7,4 +7,4 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:10214"}})
 
 #Import all required routes from routes folder
-from app.routes import delimited_file_upload_controller
+from app.routes import *

@@ -25,19 +25,14 @@ def get_top_n_images(image_directory="..\..\..\\runtime-data\images\\file", feat
 
     # get terms list 
     terms_list = [auto_detect_translate(term) for term in terms_list]
-    print("Terms list")
-    print(terms_list)
 
     # fetch image tagging model
     model, _, preprocess = open_clip.create_model_and_transforms('ViT-B-32', pretrained='laion2b_s34b_b79k')
     tokenizer = open_clip.get_tokenizer('ViT-B-32')
 
     # get image and text features
-    print("Getting text features")
     text_features = encode_terms(terms_list, model, tokenizer)
-    print("Getting image features")
     image_list, image_features = encode_images(image_list, model, preprocess, features_dir=features_directory, features_file="image_features.pth")
-    print('Done')
 
     return find_relevant_images_for_terms(terms_list, text_features, image_list, image_features)
 
@@ -77,13 +72,10 @@ def save_features(item_list, feature_list, dirname, filename):
     filepath = os.path.join(dirname, filename)  
     if not os.path.exists(dirname):
         os.makedirs(dirname)
-        print(f"Directory '{dirname}' created successfully.")
 
     if os.path.exists(filepath):
-        print(filepath + " exists")
         filepath_backup = os.path.join(dirname, filename+"__backup")
         shutil.copyfile(filepath, filepath_backup)
-    print("Saving features at "+filepath)
     torch.save(zipped_list, filepath)
 
 def load_features(dirname, filename, check_for_delete=False):
@@ -100,7 +92,6 @@ def load_features(dirname, filename, check_for_delete=False):
                     index += 1
                 else:
                     # If the file path doesn't exist, remove the tuple from the list
-                    print(f"File path '{item_path}' does not exist. Removing corresponding tuple.")
                     del loaded_tuples[index]
 
         return loaded_tuples
@@ -122,60 +113,38 @@ def encode_images(image_list, model, preprocess, features_dir, features_file):
     """
 
     loaded_features = load_features(features_dir, features_file, check_for_delete=True)
-    if loaded_features is not None:
-        print("Loaded image features")
+    if loaded_features != []:
         existing_images, existing_features = zip(*loaded_features)
         existing_images = list(existing_images)
-        print("existing_features b4")
-        print(existing_features)
         existing_features = torch.stack(existing_features, dim=0)
-        print("existing_features after4")
-        print(existing_features)
         index = 0
         while index<len(image_list):
             if image_list[index] in existing_images:
-                print("delling: "+image_list[index])
                 del image_list[index]
             else:
                 index += 1
-        print("new image list: ")
-        print(image_list)
 
 
     encoded_images = []
-    with torch.no_grad(), torch.cuda.amp.autocast():
-        for image in image_list:
-            image = preprocess(Image.open(image)).unsqueeze(0)
-            image_features = model.encode_image(image)
-            image_features /= image_features.norm(dim=-1, keepdim=True)
-            encoded_images.append(image_features)
-    print("Enc images before cat: "+str(encoded_images))
+    with torch.no_grad():
+        with torch.cuda.amp.autocast(enabled=False):
+            for image in image_list:
+                image = preprocess(Image.open(image)).unsqueeze(0)
+                image_features = model.encode_image(image)
+                image_features /= image_features.norm(dim=-1, keepdim=True)
+                encoded_images.append(image_features)
     if len(encoded_images)>0:
         encoded_images = torch.cat(encoded_images, 0)
-    print("Enc images after cat: "+str(encoded_images))
 
-    if loaded_features is None:
+    if loaded_features == []:
         final_image_list = image_list
         final_image_features = encoded_images
     else:
-        print("existingimages")
-        print(existing_images)
-        print("imageslist")
-        print(image_list)
         final_image_list = existing_images + image_list
-        print("old shape:")
-        print(existing_features.shape)
         if encoded_images == []:
             final_image_features = existing_features
         else:
-            print("new shape:")
-            print(encoded_images.shape)
             final_image_features = torch.cat((existing_features, encoded_images), dim=0)
-
-    print("FINAL IMAGE LIST: ")
-    print(final_image_list)
-    print("FINAL IMAGE FEATURES: ")
-    print(final_image_features)
 
     save_features(final_image_list, final_image_features, features_dir, features_file)
 
@@ -195,12 +164,13 @@ def encode_terms(terms_list, model, tokenizer):
     - Tensor: Tensor containing encoded text features.
     """
     encoded_terms = []
-    with torch.no_grad(), torch.cuda.amp.autocast():
-        for term_raw in terms_list:
-            term = tokenizer(term_raw)
-            text_features = model.encode_text(term)
-            text_features /= text_features.norm(dim=-1, keepdim=True)
-            encoded_terms.append(text_features)
+    with torch.no_grad():
+        with torch.cuda.amp.autocast(enabled=False):
+            for term_raw in terms_list:
+                term = tokenizer(term_raw)
+                text_features = model.encode_text(term)
+                text_features /= text_features.norm(dim=-1, keepdim=True)
+                encoded_terms.append(text_features)
     encoded_terms = torch.stack(encoded_terms)
     return encoded_terms
 
