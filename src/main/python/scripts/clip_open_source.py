@@ -113,7 +113,8 @@ def encode_images(image_list, model, preprocess, features_dir, features_file):
     """
 
     loaded_features = load_features(features_dir, features_file, check_for_delete=True)
-    if loaded_features != []:
+    if loaded_features != [] and loaded_features is not None:
+        print(loaded_features)
         existing_images, existing_features = zip(*loaded_features)
         existing_images = list(existing_images)
         existing_features = torch.stack(existing_features, dim=0)
@@ -136,7 +137,7 @@ def encode_images(image_list, model, preprocess, features_dir, features_file):
     if len(encoded_images)>0:
         encoded_images = torch.cat(encoded_images, 0)
 
-    if loaded_features == []:
+    if loaded_features == [] or loaded_features is None:
         final_image_list = image_list
         final_image_features = encoded_images
     else:
