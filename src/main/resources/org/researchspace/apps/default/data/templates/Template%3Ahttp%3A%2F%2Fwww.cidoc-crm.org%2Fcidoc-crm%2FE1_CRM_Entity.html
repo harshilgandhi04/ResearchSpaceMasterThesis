@@ -282,7 +282,90 @@
                                     </div>
                                 </div> <!--  close row -->
                             </bs-col>
+                                                       
                         </bs-row> <!--  close row -->
+                                                        
+                                                                                                                                                                <!-- manik block -->
+                                                                                              
+                             <bs-row class="row-center" style="padding:32px 0px 8px 0px;">
+                                                                                         
+                            <bs-col xs=11 sm=10 lg=8 style="padding: 12px 0px;">
+                                                                          <div class="row" style="height:100%;">  
+                                                                                                              
+                                       <mp-overlay-dialog title="Graph" type="modal">
+  <mp-overlay-dialog-trigger><button class="btn btn-default" style="margin-left:0;">Show Graph</button></mp-overlay-dialog-trigger>
+  <mp-overlay-dialog-content>
+    [[> Platform:SourceGraphBaseThesis]]
+  </mp-overlay-dialog-content>
+</mp-overlay-dialog>  
+                                                                                               
+                                  
+<semantic-query query='
+	SELECT ?entity_label  {
+	<[[this]]> <http://www.w3.org/2000/01/rdf-schema#label> ?entity_label
+
+#	<http://www.researchspace.org/architects/28ea5463-0000-41a8-bd34-cc5ff6bd96a0> <http://www.w3.org/2000/01/rdf-schema#label> ?entity_label
+}
+'
+                    template='{{> imageRecommenderArgTemplate}}'>  
+  <template id='imageRecommenderArgTemplate'>
+    {{#each bindings}}
+    
+    
+    
+			<image-recommender title="{{entity_label.value}}"
+  template='{{> architectsTemplate}}'
+		> 
+  <template id='architectsTemplate'>
+      
+        {{#each bindings}}
+          <mp-overlay-dialog title="My Dialog" type="modal">
+  <mp-overlay-dialog-trigger><button class="btn btn-default" style="margin-left:8px;">Recommend Images from Database</button></mp-overlay-dialog-trigger>
+  <mp-overlay-dialog-content>
+    [[#>rsp:ClipboardSidebar]]
+    <bs-tabs id='semantic-search' mount-on-enter=true>
+        <bs-tab event-key='text-search' title='Text Search' class="basicSearch">
+              <semantic-search config='[[searchConfigForFieldsFromQuery "SELECT DISTINCT ?field WHERE { ?field a <http://www.researchspace.org/resource/system/fields/Field> . ?field <http://www.researchspace.org/resource/system/fields/domain> ?domain . ?field <http://www.researchspace.org/resource/system/fields/range> ?range . }"]]'>
+                <semantic-search-query-keyword 
+                    domain='<http://www.cidoc-crm.org/cidoc-crm/E1_CRM_Entity>'
+                    query='
+                      SELECT ?subject
+                        from <http://www.researchspace.org/assets/images> 
+                        WHERE { 
+                        ?subject a ?type .
+                        # ?type rdfs:subClassOf* crm:E1_CRM_Entity .
+                        ?subject rdfs:label ?label .
+                        ?subject rdf:type <http://www.researchspace.org/ontology/EX_Digital_Image> .
+                        SERVICE <http://www.bigdata.com/rdf/search#search> {
+                          ?label bds:search ?__token__ ;
+                                    bds:minRelevance "0.3" ;
+                                    bds:matchAllTerms "true"  .
+                        }
+                      }
+                    '
+                    default-query={{query.value}}
+                    debounce=500
+                  ></semantic-search-query-keyword>
+                  [[> rsp:SearchResultsRecommend]]  
+              </semantic-search>
+            </bs-tab>
+            </bs-tabs>
+    [[/rsp:ClipboardSidebar]]
+  </mp-overlay-dialog-content>
+</mp-overlay-dialog>
+
+        {{/each}}
+      
+      </template>
+
+</image-recommender>
+    {{/each}}
+  </template>
+  </semantic-query>
+                                                                                   </div>          </bs-col>  </bs-row>
+                              
+                               <!-- manik block end -->
+                            
                     </div>
                 </div>
             [[/block]]      
@@ -475,68 +558,7 @@
                                         </bs-col>
                                     </bs-row> <!--  close row -->
 
-                                  
-                                  
-<semantic-query query='
-	SELECT ?entity_label  {
-	<[[this]]> <http://www.w3.org/2000/01/rdf-schema#label> ?entity_label
-
-#	<http://www.researchspace.org/architects/28ea5463-0000-41a8-bd34-cc5ff6bd96a0> <http://www.w3.org/2000/01/rdf-schema#label> ?entity_label
-}
-'
-                    template='{{> imageRecommenderArgTemplate}}'>  
-  <template id='imageRecommenderArgTemplate'>
-    {{#each bindings}}
-    
-			<image-recommender title="{{entity_label.value}}"
-  template='{{> architectsTemplate}}'
-		> 
-  <template id='architectsTemplate'>
-      
-        {{#each bindings}}
-          <mp-overlay-dialog title="My Dialog" type="modal">
-  <mp-overlay-dialog-trigger><button class="btn btn-default">Recommend Images from Database</button></mp-overlay-dialog-trigger>
-  <mp-overlay-dialog-content>
-    [[#>rsp:ClipboardSidebar]]
-    <bs-tabs id='semantic-search' mount-on-enter=true>
-        <bs-tab event-key='text-search' title='Text Search' class="basicSearch">
-              <semantic-search config='[[searchConfigForFieldsFromQuery "SELECT DISTINCT ?field WHERE { ?field a <http://www.researchspace.org/resource/system/fields/Field> . ?field <http://www.researchspace.org/resource/system/fields/domain> ?domain . ?field <http://www.researchspace.org/resource/system/fields/range> ?range . }"]]'>
-                <semantic-search-query-keyword 
-                    domain='<http://www.cidoc-crm.org/cidoc-crm/E1_CRM_Entity>'
-                    query='
-                      SELECT ?subject
-                        from <http://www.researchspace.org/assets/images> 
-                        WHERE { 
-                        ?subject a ?type .
-                        # ?type rdfs:subClassOf* crm:E1_CRM_Entity .
-                        ?subject rdfs:label ?label .
-                        ?subject rdf:type <http://www.researchspace.org/ontology/EX_Digital_Image> .
-                        SERVICE <http://www.bigdata.com/rdf/search#search> {
-                          ?label bds:search ?__token__ ;
-                                    bds:minRelevance "0.3" ;
-                                    bds:matchAllTerms "true"  .
-                        }
-                      }
-                    '
-                    default-query={{query.value}}
-                    debounce=500
-                  ></semantic-search-query-keyword>
-                  [[> rsp:SearchResultsRecommend]]  
-              </semantic-search>
-            </bs-tab>
-            </bs-tabs>
-    [[/rsp:ClipboardSidebar]]
-  </mp-overlay-dialog-content>
-</mp-overlay-dialog>
-
-        {{/each}}
-      
-      </template>
-
-</image-recommender>
-    {{/each}}
-  </template>
-  </semantic-query>
+            
                                   
                                     <bs-row class="row-center">
                                         <bs-col xs=11 sm=10 md=10 lg=8 class="rs-summary-table">
@@ -556,6 +578,10 @@
                                         </bs-col>
                                     </bs-row> 
 
+                                  
+                           
+                               
+                                  
                                 </div> <!--  close container -->
 
                             </bs-tab-pane>
