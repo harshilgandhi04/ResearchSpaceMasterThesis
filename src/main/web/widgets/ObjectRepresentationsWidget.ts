@@ -209,7 +209,8 @@ export class ObjectRepresentationsWidget extends Component<ObjectRepsWidgetProps
         this.createFocusedImageRepresentation(),
         this.createThumbnails(),
         this.createModal(),
-        this.state.imagesAreLoading ? createElement(Spinner) : null,
+        // this.state.imagesAreLoading ? createElement(Spinner) : null, //removed this to remove spinner in entity page that is not going away at all
+        this.state.imagesAreLoading ? null : null,
       ];
     } else {
       return [ createElement(TemplateItem, {
