@@ -165,7 +165,8 @@
             <semantic-search-result>
                 [[#if (hasPermission "forms:ldp:*")]]
                   <mp-selection-action-choice id='Action' title='With selected ...' selection='item-selection-aggregator'>
-                    <mp-create-set-action></mp-create-set-action>
+                    <mp-create-set-action></mp-create-set-action>            
+                    <mp-link-image-with-crm-entity-action object-iri="[[this]]"></mp-link-image-with-crm-entity-action>
                   </mp-selection-action-choice>
                 [[/if]]
 
