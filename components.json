@@ -61,6 +61,7 @@
   "mp-event-target-template-render": "platform/components/events/EventTargetTemplateRender.tsx",
   "mp-event-target-redirect": "platform/components/ui/redirect-action/RedirectAction.ts",
 
+  "resource-viewer": "platform/app/page/ResourceViewer.ts",
   "image-recommender": "platform/components/semantic/query/ImageRecommender.ts", 
   "field-editor": "platform/components/forms/field-editor/FieldEditorComponent.ts",
   "mp-field-editor": "platform/components/forms/field-editor/FieldEditorComponent.ts",
@@ -177,6 +178,7 @@
   "mp-set-management-action-rename-set": "platform/components/sets/actions/RenameSetAction.ts",
   "mp-set-management-single-set": "platform/components/sets/SingleSet.tsx",
   "mp-create-set-action": "platform/components/sets/CreateSetActionComponent.tsx",
+  "mp-link-image-with-crm-entity-action": "platform/components/sets/LinkImageWithCRMEntityAction.tsx",
 
   "mp-component-toolbar": "platform/components/persistence/ComponentToolbar.ts",
   "mp-component-toolbar-actions": "platform/components/persistence/ComponentToolbarActions.ts",
