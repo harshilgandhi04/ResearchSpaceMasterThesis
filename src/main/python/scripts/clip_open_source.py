@@ -38,7 +38,7 @@ def get_top_n_images(image_directory="..\..\..\\runtime-data\images\\file", feat
 
 
 def find_relevant_images_for_terms(terms, term_features, images, image_features,
-                                   min_confidence=0.005, max_relevant_images=5):
+                                   min_confidence=0.000000000000000005, max_relevant_images=5):
     """
     Find relevant images for a list of terms based on their features.
 
@@ -63,7 +63,7 @@ def find_relevant_images_for_terms(terms, term_features, images, image_features,
         probs = probs[probs[:, 1].astype(float).argsort()[::-1]] # Sort images by probability in descending order
         term_result = probs[:max_relevant_images] # Retrieve the top N relevant images for the term
         related_images[terms[i]] = term_result # Store the term and its relevant images in the dictionary
-
+    print(related_images)
     return related_images
 
 
@@ -114,7 +114,7 @@ def encode_images(image_list, model, preprocess, features_dir, features_file):
 
     loaded_features = load_features(features_dir, features_file, check_for_delete=True)
     if loaded_features != [] and loaded_features is not None:
-        print(loaded_features)
+        # print(loaded_features)
         existing_images, existing_features = zip(*loaded_features)
         existing_images = list(existing_images)
         existing_features = torch.stack(existing_features, dim=0)
