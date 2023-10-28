@@ -38,7 +38,7 @@ def get_top_n_images(image_directory="..\..\..\\runtime-data\images\\file", feat
 
 
 def find_relevant_images_for_terms(terms, term_features, images, image_features,
-                                   min_confidence=0.000000000000000005, max_relevant_images=5):
+                                   min_confidence=0.005, max_relevant_images=5):
     """
     Find relevant images for a list of terms based on their features.
 
